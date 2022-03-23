@@ -111,7 +111,7 @@ async def wager(
     info_embed.add_field(name="Your Team", value=team_choice, inline=False)
     info_embed.add_field(name="Your Bet", value=bet_amount, inline=True)
     info_embed.add_field(name="Payout", value=payout, inline=True)
-    info_embed.add_field(name="GitHub", value='Check out the [Github](https://github.com/AHypnotoad/Discord_Wagering_Bot) repo', inline=False)
+    info_embed.add_field(name="_________________", value='Check out the [Github](https://github.com/AHypnotoad/Discord_Wagering_Bot) repo', inline=False)
 
     # responding to the command
     await ctx.send_response("Confirm your wager:", view=view, embed=info_embed)

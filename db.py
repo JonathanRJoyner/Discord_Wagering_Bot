@@ -281,13 +281,3 @@ def pay_users():
     )
 
     con.commit()
-
-
-if __name__ == "__main__":
-    get_matches()
-    get_results()
-    #replace_result_teams()
-    #update_results()
-    #replace_winner()
-    #update_payout()
-    #pay_users()
