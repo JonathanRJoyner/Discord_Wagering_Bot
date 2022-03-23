@@ -109,10 +109,9 @@ async def wager(
     )
     info_embed.add_field(name="Game Time", value=gametime, inline=False)
     info_embed.add_field(name="Your Team", value=team_choice, inline=False)
-
     info_embed.add_field(name="Your Bet", value=bet_amount, inline=True)
     info_embed.add_field(name="Payout", value=payout, inline=True)
-    info_embed.set_footer(text="This is a placeholder footer.")
+    info_embed.add_field(name="GitHub", value='Check out the [Github](https://github.com/AHypnotoad/Discord_Wagering_Bot) repo', inline=False)
 
     # responding to the command
     await ctx.send_response("Confirm your wager:", view=view, embed=info_embed)
@@ -138,6 +137,7 @@ async def wager(
 
 
 def _payout(bet, amount):
+    '''Calculates the payout given the betting odds and the amount a user wagers.'''
     moneyline = int(float(bet.split(" | ")[-1]))
 
     if moneyline < 0:
@@ -150,18 +150,22 @@ def _payout(bet, amount):
 
 
 def _gametime(match):
+    '''Gets the gametime from teh users selected match.'''
     return match.split(" | ")[-1]
 
 
 def _match(match):
+    '''Gets the team matchup from the users selected match.'''
     return match.split(" | ")[0]
 
 
 def _teams(match):
+    '''Gets the teams from the users selected match.'''
     return match.split(" vs. ")
 
 
 def _team_choice(bet):
+    '''Gets the odds for the users selected bet.'''
     return bet.split(" | ")[0]
 
 

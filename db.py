@@ -284,9 +284,8 @@ def pay_users():
 
 
 if __name__ == "__main__":
-    pass
-    #get_matches()
-    #get_results()
+    get_matches()
+    get_results()
     #replace_result_teams()
     #update_results()
     #replace_winner()
