@@ -45,6 +45,11 @@ def get_matches():
                             VALUES (?,?,?,?,?,?,?,?,?)""",
             upcoming,
         )
+    
+    #remove away/home goals betting line from NHL teams.
+    cur.execute('''DELETE FROM matches 
+                    WHERE team1 = "Away Goals"''')
+    con.commit()
 
 
 def get_results():
@@ -164,6 +169,13 @@ def user_lookup(user):
     else:
         return data
 
+def unpaid_bets_lookup(user):
+    '''Takes a user id and returns all unpaid bets for that user.'''
+    bets = cur.execute('''SELECT * FROM user_bets
+                            WHERE user = ?
+                            AND status IS NULL''', (user,)).fetchall()
+
+    return bets
 
 def user_amount(user_id):
     '''Takes a user id and returns the user amount.'''

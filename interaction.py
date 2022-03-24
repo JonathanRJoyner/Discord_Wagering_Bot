@@ -88,7 +88,7 @@ async def wager(
         min_value=0,
     ),  # max_amount=user['amount'] eventually)
 ):
-    """This is the main wager command. Users input a sport, league, match, bet, and risked amount.
+    """This is the main wager command. Users input a sport, league, match, bet, and bet amount.
     The confirmation view is called with details about their wager."""
     view = Confirm()
     user = [str(ctx.author.id), str(ctx.author.name)]
@@ -111,7 +111,7 @@ async def wager(
     info_embed.add_field(name="Your Team", value=team_choice, inline=False)
     info_embed.add_field(name="Your Bet", value=bet_amount, inline=True)
     info_embed.add_field(name="Payout", value=payout, inline=True)
-    info_embed.add_field(name="_________________", value='Check out the [Github](https://github.com/AHypnotoad/Discord_Wagering_Bot) repo', inline=False)
+    info_embed.add_field(name="_", value='View this project on [Github](https://github.com/JonathanRJoyner/Discord_Wagering_Bot).', inline=False)
 
     # responding to the command
     await ctx.send_response("Confirm your wager:", view=view, embed=info_embed)
@@ -168,5 +168,26 @@ def _team_choice(bet):
     '''Gets the odds for the users selected bet.'''
     return bet.split(" | ")[0]
 
+@bot.slash_command(guild_ids=[888919487255031848, 272141605421580288])
+async def user_status(ctx):
+    '''Returns the users amount along with any unpaid wagers.'''
+    user = [str(ctx.author.id), str(ctx.author.name)]
+    user_amount = db.user_lookup(user)[0][-1]
+    bets = db.unpaid_bets_lookup(str(ctx.author.id))
+
+    bet_str = ''
+    for bet in bets:
+        bet = f'{bet[2]} | {bet[5]} | {bet[6]}, {bet[7]}\n'
+        bet_str += bet
+
+    #embed info
+    info_embed = discord.Embed(title='User Status', color=0x00FF00)
+    info_embed.set_author(
+        name=ctx.author.display_name, icon_url=ctx.author.display_avatar
+    )
+    info_embed.add_field(name="Your Points", value=user_amount, inline=False)
+    info_embed.add_field(name="Gametime | Team Choice | Bet Amount, Reward", value=bet_str, inline=False)    
+    info_embed.add_field(name="_", value='View this project on [Github](https://github.com/JonathanRJoyner/Discord_Wagering_Bot).', inline=False)
+    await ctx.send_response(' ',embed=info_embed)
 
 bot.run(TOKEN)

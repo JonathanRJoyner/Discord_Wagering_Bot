@@ -5,6 +5,7 @@ This bot allows users to wager points against either real odds. The points will 
 This bot is currently in early development.
 
 - [x] Get live odds.
+    -[ ] Remove away/home points betting lines.
 - [x] Get results for matches.
 - [x] Add user interaction and payouts.
     - [ ] Test payout system and ensure edge cases are corrected.
