@@ -111,7 +111,7 @@ async def wager(
     info_embed.add_field(name="Your Team", value=team_choice, inline=False)
     info_embed.add_field(name="Your Bet", value=bet_amount, inline=True)
     info_embed.add_field(name="Payout", value=payout, inline=True)
-    info_embed.add_field(name="_", value='View this project on [Github](https://github.com/JonathanRJoyner/Discord_Wagering_Bot).', inline=False)
+    info_embed.add_field(name="_", value='View this project on [GitHub](https://github.com/JonathanRJoyner/Discord_Wagering_Bot).', inline=False)
 
     # responding to the command
     await ctx.send_response("Confirm your wager:", view=view, embed=info_embed)
@@ -187,7 +187,7 @@ async def user_status(ctx):
     )
     info_embed.add_field(name="Your Points", value=user_amount, inline=False)
     info_embed.add_field(name="Gametime | Team Choice | Bet Amount, Reward", value=bet_str, inline=False)    
-    info_embed.add_field(name="_", value='View this project on [Github](https://github.com/JonathanRJoyner/Discord_Wagering_Bot).', inline=False)
+    info_embed.add_field(name="_", value='View this project on [GitHub](https://github.com/JonathanRJoyner/Discord_Wagering_Bot).', inline=False)
     await ctx.send_response(' ',embed=info_embed)
 
 bot.run(TOKEN)
