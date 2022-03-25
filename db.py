@@ -278,7 +278,8 @@ def pay_users():
                                         WHERE users.user = user_bets.user
                                         AND status IS NULL) IS NOT NULL
                                     THEN (SELECT sum(payout) FROM user_bets
-                                        WHERE users.user = user_bets.user) + amount
+                                        WHERE users.user = user_bets.user
+                                        AND status IS NULL) + amount
                                     ELSE amount
                                  END"""
     )
