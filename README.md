@@ -9,6 +9,7 @@ This bot is currently in early development.
 - [x] Add user interaction and payouts.
     - [ ] Test payout system and ensure edge cases are corrected.
     - [ ] Add ability for users to wager against other users.
+- [ ] Create Discord server
 - [ ] Add economy system.
     - [ ] Add ability for users to change embed image based on points.
     - [ ] Add ability for users to change titles based on points.
