@@ -28,14 +28,10 @@ def update_users():
   db.pay_users()
   print(f'{datetime.now()}: ran update_users()')
 
-def test():
-  print(datetime.now())
-
 schedule.every().hour.do(upcoming)
 schedule.every().day.at("09:00").do(results)
 schedule.every().day.at("09:05").do(update_matches)
 schedule.every().day.at("09:10").do(update_users)
-schedule.every().second.do(test)
 
 while True:
   schedule.run_pending()
