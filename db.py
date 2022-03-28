@@ -61,7 +61,7 @@ def get_results(sport):
 
     with con:
         cur.executemany(
-            """INSERT INTO results (gamedate, team1 ,team2, winner, status)
+            """INSERT OR IGNORE INTO results (gamedate, team1 ,team2, winner, status)
                             VALUES (?, ?, ?, ?, ?)""",
             results,
         )
@@ -295,5 +295,10 @@ def pay_users():
 
     con.commit()
 
-if __name__=="__main__":
-    get_results('hockey')
+def increase_all_user_amounts(amount):
+    '''Adds 1000 to all users in the users table.'''
+
+    cur.execute('''UPDATE users
+                    SET amount = amount + ?''', (amount,))
+
+    con.commit()
