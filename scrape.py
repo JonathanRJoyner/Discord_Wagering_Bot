@@ -2,10 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import chromedriver_autoinstaller
 from bs4 import BeautifulSoup
 from dateutil import parser
 from datetime import date, timedelta
 import time
+
+chromedriver_autoinstaller.install()
 
 class UpcomingMatch:
     '''This class represents the matches scraped from a leagues page, it takes string path of the league.'''
