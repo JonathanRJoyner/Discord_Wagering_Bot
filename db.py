@@ -31,11 +31,11 @@ cur.execute(
 )
 
 
-def get_matches():
+def get_matches(sport):
     '''Scrapes the upcoming matches and inserts them into the matches table.
         Replaces betting data if match already exists.'''
 
-    upcoming = scrape.upcoming()
+    upcoming = scrape.UpcomingMatch(sport).upcoming()
 
     upcoming = [item for item in upcoming if item[2] is not None]
 
@@ -48,16 +48,16 @@ def get_matches():
     
     #remove away/home goals betting line from NHL teams.
     cur.execute('''DELETE FROM matches 
-                    WHERE team1 = "Away Goals"''')
+                    WHERE team1 = "Away Goals"
+                    OR team2 = "Home Goals"''')
     con.commit()
 
 
-def get_results():
+def get_results(sport):
     '''Clears the results table, scrapes results data for previous day,
         and inserts data into the results table.'''
 
-    cur.execute("""DELETE FROM results""")
-    results = scrape.results()
+    results = scrape.MatchResult(sport).results()
 
     with con:
         cur.executemany(
@@ -67,7 +67,7 @@ def get_results():
         )
 
 
-def update_results():
+def update_winner():
     '''Updates the matches table with the winner results if a winner exists.'''
 
     cur.execute(
@@ -82,7 +82,7 @@ def update_results():
     con.commit()
 
 
-def upcoming_query():
+def not_started():
     """Returns the matches which have not started from the matches table."""
 
     data = cur.execute(
@@ -128,6 +128,7 @@ def bets(match):
     match = match.split(" vs. ")
     team1 = match[0]
     team2 = match[1]
+
     data = cur.execute(
         """SELECT * FROM matches WHERE team1 = ?
                         AND team2 = ?
@@ -135,9 +136,11 @@ def bets(match):
                         AND winner IS NULL""",
         (team1, team2),
     ).fetchall()
+
     data = data[0]
     bet1 = f"{data[3]} | {data[5]}"
     bet2 = f"{data[4]} | {data[6]}"
+
     if data[7] is not None:
         bet3 = f"Draw | {data[7]}"
         return [bet1, bet2, bet3]
@@ -239,9 +242,6 @@ def replace_winner():
                                      END''')
     con.commit()
 
-
-
-
 def update_payout():
     '''Updates the payout amount in player_bets table. If the team_choice team is a winner, 
         payout is the bet_amount + reward. If the match is cancelled, the bet_amount is returned.
@@ -294,3 +294,6 @@ def pay_users():
     )
 
     con.commit()
+
+if __name__=="__main__":
+    get_results('hockey')
