@@ -21,17 +21,18 @@ def update_matches():
   db.replace_result_teams()
   db.update_winner()
   db.replace_winner()
-  print(f'{datetime.now}: ran update_matches()')
+  print(f'{datetime.now()}: ran update_matches()')
 
 def update_users():
   db.update_payout()
   db.pay_users()
+  db.increase_all_user_amounts(1000)
   print(f'{datetime.now()}: ran update_users()')
 
 schedule.every().hour.do(upcoming)
-schedule.every().day.at("09:00").do(results)
-schedule.every().day.at("09:05").do(update_matches)
-schedule.every().day.at("09:10").do(update_users)
+schedule.every().day.at("09:10").do(results)
+schedule.every().day.at("09:15").do(update_matches)
+schedule.every().day.at("09:20").do(update_users)
 
 while True:
   schedule.run_pending()
