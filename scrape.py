@@ -1,18 +1,19 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from datetime import date, timedelta
 import chromedriver_autoinstaller
+from selenium import webdriver
 from bs4 import BeautifulSoup
 from dateutil import parser
-from datetime import date, timedelta
 import time
 
 chromedriver_autoinstaller.install()
 
-options = Options()
-options.headless = True
+options = webdriver.ChromeOptions()
+options.add_argument('--no-sandbox')
+options.add_argument('--headless')
+options.add_argument('--disable-gpu')
 
 class UpcomingMatch:
     '''This class represents the matches scraped from a leagues page, it takes string path of the league.'''
@@ -24,7 +25,7 @@ class UpcomingMatch:
     def scrape(self):
         """Gets the upcoming matches given a list of paths to scrape."""
 
-        driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(chrome_options=options)
 
         driver.get(f"https://www.bovada.lv/sports/{self.path}")
         try:
@@ -208,7 +209,7 @@ class MatchResult:
 
         search_date = MatchResult.yesterday()
 
-        driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(chrome_options=options)
         driver.get(f"https://scores.bovada.lv/en/{self.sport}/events?date={search_date}")
 
         time.sleep(20)
