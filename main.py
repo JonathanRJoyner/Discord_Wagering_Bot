@@ -15,6 +15,8 @@ def upcoming():
 def results():
   for sport in sports_results:
     db.get_results(sport)
+    update_matches()
+    update_users()
   print(f'{datetime.now()}: ran results()')
 
 def update_matches():
@@ -30,9 +32,7 @@ def update_users():
   print(f'{datetime.now()}: ran update_users()')
 
 schedule.every().hour.do(upcoming)
-schedule.every().day.at("09:10").do(results)
-schedule.every().day.at("09:15").do(update_matches)
-schedule.every().day.at("09:20").do(update_users)
+schedule.every(3).hours.do(results)
 
 while True:
   schedule.run_pending()

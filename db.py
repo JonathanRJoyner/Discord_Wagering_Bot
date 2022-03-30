@@ -66,7 +66,6 @@ def get_results(sport):
             results,
         )
 
-
 def update_winner():
     '''Updates the matches table with the winner results if a winner exists.'''
 
@@ -256,7 +255,7 @@ def update_payout():
                                     THEN bet_amount + reward
                                     WHEN (SELECT winner FROM matches
                                         WHERE DATE(matches.gametime) = DATE(user_bets.gametime)
-                                        AND matches.team1 = user_bets.team1) = "Canc."
+                                        AND matches.team1 = user_bets.team1) = " Canc."
                                     THEN bet_amount
                                     WHEN (SELECT winner FROM matches
                                         WHERE DATE(matches.gametime) = DATE(user_bets.gametime)

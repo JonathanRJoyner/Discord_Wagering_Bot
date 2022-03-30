@@ -1,3 +1,4 @@
+from difflib import Match
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -12,7 +13,7 @@ chromedriver_autoinstaller.install()
 
 options = webdriver.ChromeOptions()
 options.add_argument('--no-sandbox')
-options.add_argument('--headless')
+#options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 
 class UpcomingMatch:
@@ -25,7 +26,7 @@ class UpcomingMatch:
     def scrape(self):
         """Gets the upcoming matches given a list of paths to scrape."""
 
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(options=options)
 
         driver.get(f"https://www.bovada.lv/sports/{self.path}")
         try:
@@ -202,15 +203,11 @@ class MatchResult:
         self.sport = sport
         self.html = self.scrape()
          
-
-
     def scrape(self):
         '''Scrapes the results given the sport.'''
 
-        search_date = MatchResult.yesterday()
-
-        driver = webdriver.Chrome(chrome_options=options)
-        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events?date={search_date}")
+        driver = webdriver.Chrome(options=options)
+        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events")
 
         time.sleep(20)
 
@@ -218,45 +215,50 @@ class MatchResult:
 
         return html
     
+    def soup(self):
+        return BeautifulSoup(self.html, 'html.parser')
+
+    def match_date(self):
+        date = self.soup().find('span', 'date').text
+        date = parser.parse(date).date()
+        return date
+    
     def matches(self):
         '''Takes the scraped match results html and makes a soup of each match.'''
 
-        soup = BeautifulSoup(self.html, "html.parser")
-        matches = soup.find_all("div", "event__container")
+        matches = self.soup().find_all("div", "event__container")
         return matches
 
     def results(self):
         '''Takes the list of matches and returns the gamedate, teams, winner, and status as a tuple.'''
 
         results = []
-        date = MatchResult.yesterday().strftime("%Y-%m-%d")
+
+        match_date = self.match_date()
 
         for match in self.matches():
-            teams = MatchResult.teams(match)
-            status = MatchResult.status(match)
-            winner = MatchResult.winner(match)
-
-            output = (str(date), teams[0], teams[1], winner, status)
-            results.append(output)
+            status = MatchResult.status(match)            
+            if status != "Unfinished":
+                teams = MatchResult.teams(match)
+                winner = MatchResult.winner(match)
+                output = (str(match_date), teams[0], teams[1], winner, status)
+                results.append(output)
 
         return results
 
     @staticmethod
-    def yesterday():
-        '''Gets yesterdays date'''
-        return date.today() - timedelta(days=1)
-
-    @staticmethod
     def status(match):
-        '''Takes an individual match and returns the status. Status is "Canc." if none is found.'''
+        '''Takes an individual match and returns the status. Returns "Unfinished" if the match hasn't concluded.'''
 
-        try:
-            status = match.find("span", "status--name").text
+        finished = set([' AOT', ' AW', ' Fin.', ' Fin pen.', ' fin', ' Canc.', ' Fin ext.'])
 
-        except AttributeError:
-            status = "Canc."
+        status = match.find("div", "event__cell flex flex--centered event__cell--status").text
 
-        return status
+        if status in finished:
+            return status
+        
+        else:
+            return 'Unfinished'
 
     @staticmethod
     def winner(match):
@@ -267,8 +269,8 @@ class MatchResult:
             winner = match.find("a", "link winner").text
 
         except AttributeError:
-            if MatchResult.status(match) == "Canc.":
-                winner = "Canc."
+            if MatchResult.status(match) == " Canc.":
+                winner = " Canc."
             else:
                 winner = "Draw"
 
@@ -285,3 +287,7 @@ class MatchResult:
             team_list.append(team)
 
         return team_list
+
+if __name__ == "__main__":
+    test = MatchResult('dota2').results()
+    print(test)
