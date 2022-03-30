@@ -287,7 +287,3 @@ class MatchResult:
             team_list.append(team)
 
         return team_list
-
-if __name__ == "__main__":
-    test = MatchResult('dota2').results()
-    print(test)
