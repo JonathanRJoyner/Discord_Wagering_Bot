@@ -54,8 +54,8 @@ def get_matches(sport):
 
 
 def get_results(sport):
-    '''Clears the results table, scrapes results data for previous day,
-        and inserts data into the results table.'''
+    '''Scrapes results and inserts data into the results table.
+        Deletes any results older than 2 days.'''
 
     results = scrape.MatchResult(sport).results()
 
@@ -65,6 +65,10 @@ def get_results(sport):
                             VALUES (?, ?, ?, ?, ?)""",
             results,
         )
+
+    cur.execute('''DELETE FROM results 
+                    WHERE gamedate <= DATE("now","-2 days")''')
+    con.commit()
 
 def update_winner():
     '''Updates the matches table with the winner results if a winner exists.'''
