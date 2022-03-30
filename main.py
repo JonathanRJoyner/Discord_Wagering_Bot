@@ -3,9 +3,10 @@ import time
 import schedule
 from datetime import datetime
 
-upcoming_leagues = ['soccer/major-league-soccer/mls', 'soccer/england-premier-league', 'basketball/nba', 'hockey/nhl', 'hockey/united-states/ahl']
+upcoming_leagues = ['soccer/major-league-soccer/mls', 'soccer/england-premier-league', 'basketball/nba', 'hockey/nhl', 'hockey/united-states/ahl', 'esports/dota-2']
 
-sports_results = ['soccer', 'basketball', 'hockey']
+sports_results = ['soccer', 'basketball', 'hockey', 'dota2']
+
 
 def upcoming():
   for league in upcoming_leagues:
@@ -32,7 +33,7 @@ def update_users():
   print(f'{datetime.now()}: ran update_users()')
 
 schedule.every().hour.do(upcoming)
-schedule.every(3).hours.do(results)
+schedule.every().hour.do(results)
 
 while True:
   schedule.run_pending()
