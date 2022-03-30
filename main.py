@@ -35,6 +35,9 @@ def update_users():
 schedule.every().hour.do(upcoming)
 schedule.every().hour.do(results)
 
+if __name__=="__main__":
+  upcoming()
+
 while True:
   schedule.run_pending()
   time.sleep(1)
