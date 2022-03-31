@@ -28,11 +28,11 @@ def update_matches():
 def update_users():
   db.update_payout()
   db.pay_users()
-  db.increase_all_user_amounts(1000)
   print(f'{datetime.now()}: ran update_users()')
 
 schedule.every().hour.do(upcoming)
 schedule.every().hour.do(results)
+schedule.every().day.do(db.increase_all_user_amounts)
 
 if __name__=="__main__":
   upcoming()
