@@ -21,7 +21,6 @@ def results():
   print(f'{datetime.now()}: ran results()')
 
 def update_matches():
-  db.replace_result_teams()
   db.update_winner()
   db.replace_winner()
   print(f'{datetime.now()}: ran update_matches()')

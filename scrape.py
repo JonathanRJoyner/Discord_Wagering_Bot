@@ -267,6 +267,7 @@ class MatchResult:
 
         try:
             winner = match.find("a", "link winner").text
+            winner = MatchResult.swap_names(winner)
 
         except AttributeError:
             if MatchResult.status(match) == " Canc.":
@@ -284,6 +285,17 @@ class MatchResult:
 
         for team in teams:
             team = team.text
+            team = MatchResult.swap_names(team)
             team_list.append(team)
 
         return team_list
+
+    @staticmethod
+    def swap_names(team):
+        swap_names = {'Los Angeles Clippers':'L.A. Clippers'}
+
+        if team in swap_names:
+            return swap_names.get(team)
+
+        else:
+            return team

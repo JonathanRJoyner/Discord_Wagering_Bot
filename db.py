@@ -215,22 +215,6 @@ def user_bet(data):
 
     con.commit()
 
-
-def replace_result_teams():
-    '''Replaces team names in the winners column of results to concur with match names.'''
-
-    # NBA team replacements
-    cur.execute(
-        """UPDATE results
-                    SET winner = REPLACE(winner, "Los Angeles Clippers", "L.A. Clippers"),
-                        team1 = REPLACE(team1, "Los Angeles Clippers", "L.A. Clippers"),
-                        team2 = REPLACE(team2, "Los Angeles Clippers", "L.A. Clippers")"""
-    )
-
-    # Other team replacements
-
-    con.commit()
-
 def replace_winner():
     '''The winner of a match could have a different name based on the results table.
         This changes the name to the original name used in the matches table.'''
