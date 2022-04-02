@@ -7,13 +7,14 @@ import chromedriver_autoinstaller
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from dateutil import parser
+import datetime
 import time
 
 chromedriver_autoinstaller.install()
 
 options = webdriver.ChromeOptions()
 options.add_argument('--no-sandbox')
-options.add_argument('--headless')
+#options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 
 class UpcomingMatch:
@@ -219,9 +220,10 @@ class MatchResult:
         return BeautifulSoup(self.html, 'html.parser')
 
     def match_date(self):
-        date = self.soup().find('span', 'date').text
-        date = parser.parse(date).date()
-        return date
+        match_date = self.soup().find('span', 'date').text
+        match_date = datetime.datetime.strptime(match_date, '%d.%m.%Y').strftime('%Y-%m-%d')
+        print(match_date)
+        return match_date
     
     def matches(self):
         '''Takes the scraped match results html and makes a soup of each match.'''
@@ -292,7 +294,10 @@ class MatchResult:
 
     @staticmethod
     def swap_names(team):
-        swap_names = {'Los Angeles Clippers':'L.A. Clippers'}
+        swap_names = {
+            'Los Angeles Clippers':'L.A. Clippers', 
+            'Belleville Senators':'Binghamton Senators'
+        }
 
         if team in swap_names:
             return swap_names.get(team)
