@@ -1,7 +1,7 @@
 import db
 import time
 import schedule
-from datetime import datetime
+from datetime import datetime, timedelta
 
 upcoming_leagues = ['soccer/major-league-soccer/mls', 'soccer/england-premier-league', 'basketball/nba', 'hockey/nhl', 'hockey/united-states/ahl', 'esports/dota-2']
 
@@ -14,10 +14,12 @@ def upcoming():
   print(f'{datetime.now()}: ran upcoming()')
 
 def results():
+  match_date = (datetime.now() - timedelta(hours = 5)).date()
+
   for sport in sports_results:
-    db.get_results(sport)
-    update_matches()
-    update_users()
+    db.get_results(sport, match_date)
+  update_matches()
+  update_users()
   print(f'{datetime.now()}: ran results()')
 
 def update_matches():
@@ -35,7 +37,7 @@ schedule.every().hour.do(results)
 schedule.every().day.do(db.increase_all_user_amounts)
 
 if __name__=="__main__":
-  upcoming()
+  results()
 
 while True:
   schedule.run_pending()

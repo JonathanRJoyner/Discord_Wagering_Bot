@@ -14,7 +14,7 @@ chromedriver_autoinstaller.install()
 
 options = webdriver.ChromeOptions()
 options.add_argument('--no-sandbox')
-options.add_argument('--headless')
+#options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 
 class UpcomingMatch:
@@ -200,15 +200,16 @@ class MatchResult:
     '''This class represents and individual match result. Each method gathers one piece of match information.
         Takes soup object.'''
 
-    def __init__(self, sport):
+    def __init__(self, sport, match_date):
         self.sport = sport
+        self.date = match_date
         self.html = self.scrape()
          
     def scrape(self):
         '''Scrapes the results given the sport.'''
 
         driver = webdriver.Chrome(options=options)
-        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events")
+        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events?date={self.date}")
 
         time.sleep(20)
 
@@ -222,7 +223,6 @@ class MatchResult:
     def match_date(self):
         match_date = self.soup().find('span', 'date').text
         match_date = datetime.datetime.strptime(match_date, '%d.%m.%Y').strftime('%Y-%m-%d')
-        print(match_date)
         return match_date
     
     def matches(self):

@@ -53,11 +53,11 @@ def get_matches(sport):
     con.commit()
 
 
-def get_results(sport):
+def get_results(sport, match_date):
     '''Scrapes results and inserts data into the results table.
         Deletes any results older than 2 days.'''
 
-    results = scrape.MatchResult(sport).results()
+    results = scrape.MatchResult(sport, match_date).results()
 
     with con:
         cur.executemany(
