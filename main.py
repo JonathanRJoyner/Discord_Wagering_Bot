@@ -37,7 +37,7 @@ schedule.every().hour.do(results)
 schedule.every().day.do(db.increase_all_user_amounts)
 
 if __name__=="__main__":
-  results()
+  upcoming()
 
 while True:
   schedule.run_pending()
