@@ -145,7 +145,7 @@ def bets(match):
     bet1 = f"{data[4]} | {data[6]}"
     bet2 = f"{data[5]} | {data[7]}"
 
-    if data[7] is not None:
+    if data[8] is not None:
         bet3 = f"Draw | {data[8]}"
         return [bet1, bet2, bet3]
 
