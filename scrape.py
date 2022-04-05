@@ -1,8 +1,6 @@
-from difflib import Match
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
-from datetime import date, timedelta
 import chromedriver_autoinstaller
 from selenium import webdriver
 from bs4 import BeautifulSoup
@@ -79,13 +77,19 @@ class UpcomingMatch:
         for match in self.matches():
             bet = UpcomingMatch.win_bets(match)
             teams = UpcomingMatch.teams(match)
-            gametime = UpcomingMatch.gametime(match)
+            
+            mdt = UpcomingMatch.match_datetime(match)
+            print(mdt)
+            match_date = mdt.strftime('%Y-%m-%d')
+            match_time = mdt.strftime('%H:%M')
+
 
             try:
                 data = (
                     self.sport(),
                     self.league(),
-                    gametime,
+                    match_date,
+                    match_time,
                     teams[0],
                     teams[1],
                     bet[0],
@@ -101,24 +105,23 @@ class UpcomingMatch:
         return output
 
     @staticmethod
-    def gametime(match):
+    def match_datetime(match):
         """finds the gametime for each matchup."""
 
         try:
-            gametime = match.find("span", "period hidden-xs").text
+            mdt = match.find("span", "period hidden-xs").text
 
             try:
-                gametime = parser.parse(gametime)
-                gametime = gametime.strftime("%Y-%m-%d %H:%M:%S")
+                mdt = parser.parse(mdt)
 
             # this catches any live matches and sets the gametime to None
             except parser.ParserError:
-                gametime = None
+                mdt = None
 
         # this catches errors with the gametime not existing.
         except AttributeError:
-            gametime = None
-        return gametime      
+            mdt = None
+        return mdt      
 
     @staticmethod
     def teams(match):
@@ -209,7 +212,7 @@ class MatchResult:
         '''Scrapes the results given the sport.'''
 
         driver = webdriver.Chrome(options=options)
-        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events?date={self.date}")
+        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events?date={self.date}&type=finished")
 
         time.sleep(20)
 
@@ -239,28 +242,12 @@ class MatchResult:
         match_date = self.match_date()
 
         for match in self.matches():
-            status = MatchResult.status(match)            
-            if status != "Unfinished":
-                teams = MatchResult.teams(match)
-                winner = MatchResult.winner(match)
-                output = (str(match_date), teams[0], teams[1], winner, status)
-                results.append(output)
+            teams = MatchResult.teams(match)
+            winner = MatchResult.winner(match)
+            output = (str(match_date), teams[0], teams[1], winner)
+            results.append(output)
 
         return results
-
-    @staticmethod
-    def status(match):
-        '''Takes an individual match and returns the status. Returns "Unfinished" if the match hasn't concluded.'''
-
-        finished = set([' AOT', ' AW', ' Fin.', ' Fin pen.', ' fin', ' Canc.', ' Fin ext.'])
-
-        status = match.find("div", "event__cell flex flex--centered event__cell--status").text
-
-        if status in finished:
-            return status
-        
-        else:
-            return 'Unfinished'
 
     @staticmethod
     def winner(match):
@@ -272,8 +259,8 @@ class MatchResult:
             winner = MatchResult.swap_names(winner)
 
         except AttributeError:
-            if MatchResult.status(match) == " Canc.":
-                winner = " Canc."
+            if MatchResult.status(match) == "Canc.":
+                winner = "Canc."
             else:
                 winner = "Draw"
 

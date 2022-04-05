@@ -9,8 +9,8 @@ cur = con.cursor()
 #create necessary tables if the tables to not exist
 cur.execute(
     """CREATE TABLE IF NOT EXISTS matches
-                (sport, league, gametime, team1, team2, bet1, bet2, draw, winner,
-                PRIMARY KEY(gametime, team1, team2))"""
+                (sport, league, gamedate, gametime, team1, team2, bet1, bet2, draw, winner,
+                PRIMARY KEY(gamedate, team1, team2))"""
 )
 
 cur.execute(
@@ -21,7 +21,7 @@ cur.execute(
 
 cur.execute(
     """CREATE TABLE IF NOT EXISTS user_bets
-                (user, league, gametime, team1, team2, team_choice, bet_amount, reward, payout, status)"""
+                (user, league, gamedate, team1, team2, team_choice, bet_amount, reward, payout, status)"""
 )
 
 cur.execute(
@@ -41,8 +41,8 @@ def get_matches(sport):
 
     with con:
         cur.executemany(
-            """INSERT OR REPLACE INTO matches (sport, league, gametime, team1, team2, bet1, bet2, draw, winner) 
-                            VALUES (?,?,?,?,?,?,?,?,?)""",
+            """INSERT OR REPLACE INTO matches (sport, league, gamedate, gametime, team1, team2, bet1, bet2, draw, winner) 
+                            VALUES (?,?,?,?,?,?,?,?,?,?)""",
             upcoming,
         )
     
@@ -61,8 +61,8 @@ def get_results(sport, match_date):
 
     with con:
         cur.executemany(
-            """INSERT OR IGNORE INTO results (gamedate, team1 ,team2, winner, status)
-                            VALUES (?, ?, ?, ?, ?)""",
+            """INSERT OR IGNORE INTO results (gamedate, team1 ,team2, winner)
+                            VALUES (?, ?, ?, ?)""",
             results,
         )
 
@@ -77,7 +77,8 @@ def update_winner():
         """UPDATE matches 
                     SET winner = (SELECT winner 
                                     FROM results
-                                    WHERE (DATE(matches.gametime) = DATE(results.gamedate))
+                                    WHERE (DATE(matches.gamedate) = DATE(results.gamedate)
+                                            OR DATE(matches.gamedate, "+1 day") = DATE(results.gamedate))
                                     AND ( substr(matches.team1, 1, 5) IN( substr(results.team1, 1, 5), substr(results.team2, 1, 5)))
                                     AND ( substr(matches.team2, 1, 5) IN(substr(results.team1, 1, 5), substr(results.team2, 1, 5))))
                     WHERE winner IS NULL"""
@@ -89,7 +90,7 @@ def not_started():
     """Returns the matches which have not started from the matches table."""
 
     data = cur.execute(
-        "SELECT * FROM matches where DATETIME(gametime) > DATETIME('now', 'localtime')"
+        "SELECT * FROM matches where DATETIME(gamedate||gametime) > DATETIME('now', 'localtime')"
     ).fetchall()
     return data
 
@@ -114,8 +115,8 @@ def matches(league):
     '''Takes a league and returns a list of matches from the matches table.'''
 
     data = cur.execute(
-        """SELECT * FROM matches WHERE league = ? 
-                        AND DATETIME(gametime) > DATETIME('now', 'localtime')
+        """SELECT * FROM matches WHERE league = ?
+                        AND DATETIME(gamedate||gametime) > DATETIME('now',  'localtime') 
                         AND bet1 IS NOT NULL
                         AND bet2 IS NOT NULL
                         AND winner IS NULL""",
@@ -135,17 +136,17 @@ def bets(match):
     data = cur.execute(
         """SELECT * FROM matches WHERE team1 = ?
                         AND team2 = ?
-                        AND DATETIME(gametime) > DATETIME('now', 'localtime')
+                        AND DATETIME(gamedate||gametime) >= DATETIME('now', 'localtime')
                         AND winner IS NULL""",
         (team1, team2),
     ).fetchall()
 
     data = data[0]
-    bet1 = f"{data[3]} | {data[5]}"
-    bet2 = f"{data[4]} | {data[6]}"
+    bet1 = f"{data[4]} | {data[6]}"
+    bet2 = f"{data[5]} | {data[7]}"
 
     if data[7] is not None:
-        bet3 = f"Draw | {data[7]}"
+        bet3 = f"Draw | {data[8]}"
         return [bet1, bet2, bet3]
 
     else:
@@ -202,7 +203,7 @@ def user_bet(data):
     new_amount = amount - data[-4]
 
     cur.execute(
-        """INSERT INTO user_bets (user, league, gametime, team1, team2, team_choice, bet_amount, reward, payout, status)
+        """INSERT INTO user_bets (user, league, gamedate, team1, team2, team_choice, bet_amount, reward, payout, status)
                     VALUES(?,?,?,?,?,?,?,?,?,?)""",
         data,
     )
@@ -238,15 +239,15 @@ def update_payout():
         """UPDATE user_bets
                     SET payout = CASE 
                                     WHEN (SELECT winner FROM matches
-                                        WHERE DATE(matches.gametime) = DATE(user_bets.gametime)
+                                        WHERE DATE(matches.gamedate) = DATE(user_bets.gamedate)
                                         AND matches.team1 = user_bets.team1) = user_bets.team_choice
                                     THEN bet_amount + reward
                                     WHEN (SELECT winner FROM matches
-                                        WHERE DATE(matches.gametime) = DATE(user_bets.gametime)
+                                        WHERE DATE(matches.gamedate) = DATE(user_bets.gamedate)
                                         AND matches.team1 = user_bets.team1) = " Canc."
                                     THEN bet_amount
                                     WHEN (SELECT winner FROM matches
-                                        WHERE DATE(matches.gametime) = DATE(user_bets.gametime)
+                                        WHERE DATE(matches.gamedate) = DATE(user_bets.gamedate)
                                         AND matches.team1 = user_bets.team1) IS NULL
                                     THEN NULL
                                     ELSE 0 

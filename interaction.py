@@ -27,7 +27,7 @@ async def get_leagues(ctx: discord.AutocompleteContext):
 async def get_match(ctx: discord.AutocompleteContext):
     """Returns a list of teams that are within the selected sport option"""
     return [
-        f"{match[3]} vs. {match[4]} | {match[2]}"
+        f"{match[4]} vs. {match[5]} | {match[2]} {match[3]}"
         for match in db.matches(ctx.options["league"])
     ]
 
@@ -113,7 +113,7 @@ async def wager(
         data = (
             user[0],
             league,
-            gametime,
+            gametime[0:10],
             teams[0],
             teams[1],
             team_choice,
