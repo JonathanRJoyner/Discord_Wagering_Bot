@@ -79,8 +79,12 @@ class UpcomingMatch:
             teams = UpcomingMatch.teams(match)
             
             mdt = UpcomingMatch.match_datetime(match)
-            match_date = mdt.strftime('%Y-%m-%d')
-            match_time = mdt.strftime('%H:%M')
+
+            try:
+                match_date = mdt.strftime('%Y-%m-%d')
+                match_time = mdt.strftime('%H:%M')
+            except AttributeError:
+                pass
 
 
             try:
@@ -96,11 +100,12 @@ class UpcomingMatch:
                     bet[2],
                     None,
                 )
+                output.append(data)
             except IndexError:
                 pass
+            except UnboundLocalError:
+                pass
 
-            output.append(data)
-        
         return output
 
     @staticmethod
