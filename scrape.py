@@ -112,15 +112,15 @@ class UpcomingMatch:
 
             try:
                 mdt = parser.parse(mdt)
+                return mdt
 
             # this catches any live matches and sets the gametime to None
             except parser.ParserError:
-                mdt = None
+                pass
 
         # this catches errors with the gametime not existing.
         except AttributeError:
-            mdt = None
-        return mdt      
+            pass    
 
     @staticmethod
     def teams(match):
