@@ -79,7 +79,6 @@ class UpcomingMatch:
             teams = UpcomingMatch.teams(match)
             
             mdt = UpcomingMatch.match_datetime(match)
-            print(mdt)
             match_date = mdt.strftime('%Y-%m-%d')
             match_time = mdt.strftime('%H:%M')
 
