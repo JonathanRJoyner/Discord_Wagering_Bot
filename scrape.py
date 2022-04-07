@@ -216,7 +216,7 @@ class MatchResult:
         '''Scrapes the results given the sport.'''
 
         driver = webdriver.Chrome(options=options)
-        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events?date={self.date}&type=finished")
+        driver.get(f"https://scores.bovada.lv/en/{self.sport}/events?date={self.date}")
 
         time.sleep(20)
 
@@ -228,9 +228,13 @@ class MatchResult:
         return BeautifulSoup(self.html, 'html.parser')
 
     def match_date(self):
-        match_date = self.soup().find('span', 'date').text
-        match_date = datetime.datetime.strptime(match_date, '%d.%m.%Y').strftime('%Y-%m-%d')
-        return match_date
+        try:
+            match_date = self.soup().find('span', 'date').text
+            match_date = datetime.datetime.strptime(match_date, '%d.%m.%Y').strftime('%Y-%m-%d')
+            return match_date
+
+        except AttributeError:
+            pass
     
     def matches(self):
         '''Takes the scraped match results html and makes a soup of each match.'''
@@ -246,8 +250,17 @@ class MatchResult:
         match_date = self.match_date()
 
         for match in self.matches():
-            teams = MatchResult.teams(match)
-            winner = MatchResult.winner(match)
+            status = MatchResult.status(match)
+            if status == "Unfinished":
+                pass
+
+            elif status == " Canc.":
+                winner = "Canc."
+
+            else:
+                teams = MatchResult.teams(match)
+                winner = MatchResult.winner(match)
+            
             output = (str(match_date), teams[0], teams[1], winner)
             results.append(output)
 
@@ -263,12 +276,23 @@ class MatchResult:
             winner = MatchResult.swap_names(winner)
 
         except AttributeError:
-            if MatchResult.status(match) == "Canc.":
-                winner = "Canc."
-            else:
                 winner = "Draw"
 
         return winner
+
+    @staticmethod
+    def status(match):
+        '''Takes an individual match and returns the status. Returns "Unfinished" if the match hasn't concluded.'''
+
+        finished = set([' AOT', ' AW', ' Fin.', ' Fin pen.', ' fin', ' Canc.', ' Fin ext.'])
+
+        status = match.find("div", "event__cell flex flex--centered event__cell--status").text
+
+        if status in finished:
+            return status
+        
+        else:
+            return 'Unfinished'        
 
     @staticmethod
     def teams(match):
