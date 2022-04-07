@@ -251,16 +251,17 @@ class MatchResult:
 
         for match in self.matches():
             status = MatchResult.status(match)
+            
             if status == "Unfinished":
-                pass
+                continue
 
             elif status == " Canc.":
                 winner = "Canc."
 
             else:
-                teams = MatchResult.teams(match)
                 winner = MatchResult.winner(match)
-            
+
+            teams = MatchResult.teams(match)            
             output = (str(match_date), teams[0], teams[1], winner)
             results.append(output)
 
