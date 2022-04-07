@@ -38,6 +38,12 @@ schedule.every().day.do(db.increase_all_user_amounts)
 
 if __name__=="__main__":
   upcoming()
+  today = datetime.now().date()
+  yesterday = (datetime.now() - timedelta(days = 1)).date()
+  for sport in sports_results:
+    db.get_results(sport, today)
+    db.get_results(sport, yesterday)
+
 
 while True:
   schedule.run_pending()
