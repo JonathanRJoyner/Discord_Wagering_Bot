@@ -85,16 +85,6 @@ def update_winner():
     )
     con.commit()
 
-
-def not_started():
-    """Returns the matches which have not started from the matches table."""
-
-    data = cur.execute(
-        "SELECT * FROM matches where DATETIME(gamedate||gametime) > DATETIME('now', 'localtime')"
-    ).fetchall()
-    return data
-
-
 def sports():
     '''Returns a list of sports from the matches table.'''
 
