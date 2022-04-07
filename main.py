@@ -14,7 +14,7 @@ def upcoming():
   print(f'{datetime.now()}: ran upcoming()')
 
 def results():
-  match_date = (datetime.now() - timedelta(hours = 5)).date()
+  match_date = (datetime.now() - timedelta(hours = 1)).date()
 
   for sport in sports_results:
     db.get_results(sport, match_date)
