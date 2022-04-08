@@ -34,7 +34,7 @@ async def get_match(ctx: discord.AutocompleteContext):
 async def get_bets(ctx: discord.AutocompleteContext):
     return [bet for bet in db.bets(ctx.options["match"])]
 
-@bot.slash_command(guild_ids=[888919487255031848, 272141605421580288])
+@bot.slash_command(guild_ids=[888919487255031848, 272141605421580288, 958450378083561472])
 async def wager(
     ctx: discord.ApplicationContext,
     sport: Option(
@@ -154,7 +154,7 @@ class Confirm(discord.ui.View):
         self.value = False
         self.stop()
 
-@bot.slash_command(guild_ids=[888919487255031848, 272141605421580288])
+@bot.slash_command(guild_ids=[888919487255031848, 272141605421580288, 958450378083561472])
 async def user_status(ctx):
     '''Returns the users amount along with any unpaid wagers.'''
     user = [str(ctx.author.id), str(ctx.author.name)]
