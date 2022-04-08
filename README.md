@@ -13,3 +13,5 @@ This bot is currently in early development.
 - [ ] Add economy system.
     - [ ] Add ability for users to change embed image based on points.
     - [ ] Add ability for users to change titles based on points.
+
+Discord Server: https://discord.gg/Xq44DsKG
