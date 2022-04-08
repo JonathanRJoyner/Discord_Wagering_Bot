@@ -1,6 +1,7 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 import chromedriver_autoinstaller
 from selenium import webdriver
 from bs4 import BeautifulSoup
@@ -35,7 +36,8 @@ class UpcomingMatch:
             )
             time.sleep(1)
 
-        except:
+        except TimeoutException as ex:
+            print(f'UpcomingMatch: {ex}')
             pass
 
         html = driver.page_source
@@ -220,7 +222,12 @@ class MatchResult:
 
         time.sleep(20)
 
-        html = driver.page_source
+        try:
+            html = driver.page_source
+        
+        except TimeoutException as ex:
+            print(f'MatchResult: {ex}')
+            pass
 
         return html
     
