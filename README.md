@@ -13,4 +13,8 @@ This bot is currently in early development.
     - [ ] Add ability for users to change embed image based on points.
     - [ ] Add ability for users to change titles based on points.
 
+- [x] Create Discord server    
+    - [x] Allow users to test bot on the Discord server.
+    - [ ] Build out help section/contributor section/bug reporting section
+
 Discord Server: https://discord.gg/Xq44DsKG
