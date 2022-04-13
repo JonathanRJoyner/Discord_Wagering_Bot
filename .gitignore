@@ -3,3 +3,4 @@
 /env
 /bets.db
 /cleanup.py
+cogs/__pycache__
