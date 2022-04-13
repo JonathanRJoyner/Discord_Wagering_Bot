@@ -87,7 +87,7 @@ def update_winner():
 
 def sports():
     '''Returns a list of sports from the matches table.'''
-
+    
     data = cur.execute("""SELECT DISTINCT sport FROM matches""").fetchall()
     return [item[0] for item in data]
 

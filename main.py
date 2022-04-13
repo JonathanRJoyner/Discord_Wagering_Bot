@@ -33,11 +33,14 @@ def update_users():
   print(f'{datetime.now()}: ran update_users()')
 
 schedule.every().hour.do(upcoming)
+
 schedule.every().hour.do(results)
+
 schedule.every().day.do(db.increase_all_user_amounts)
 
 if __name__=="__main__":
   upcoming()
+  
   today = datetime.now().date()
   yesterday = (datetime.now() - timedelta(days = 1)).date()
   for sport in sports_results:
