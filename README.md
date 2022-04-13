@@ -17,4 +17,15 @@ This bot is currently in early development.
     - [x] Allow users to test bot on the Discord server.
     - [ ] Build out help section/contributor section/bug reporting section
 
-Discord Server: https://discord.gg/Xq44DsKG
+- [ ] Add Dockerfile for deployment.
+---
+## Deployment & Help ##
+
+Currently, the deployment route is as follows:
+
+1. Clone this repository
+2. Install requirements
+3. Run main.py
+4. Run interaction.py
+
+For any help you can [check out our Discord server](https://discord.gg/Xq44DsKG) or message me [directly on Twitter](https://twitter.com/JonathanRJoyner).
