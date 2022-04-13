@@ -273,10 +273,10 @@ def pay_users():
 
     con.commit()
 
-def increase_all_user_amounts(amount):
+def increase_all_user_amounts():
     '''Adds 1000 to all users in the users table.'''
 
     cur.execute('''UPDATE users
-                    SET amount = amount + ?''', (amount,))
+                    SET amount = amount + ?''', (1000,))
 
     con.commit()
