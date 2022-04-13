@@ -1,7 +1,4 @@
 import discord
-
-
-import discord
 from discord.ext import commands
 from discord.commands import Option, slash_command
 
