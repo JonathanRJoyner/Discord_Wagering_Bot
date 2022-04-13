@@ -25,7 +25,8 @@ Currently, the deployment route is as follows:
 
 1. Clone this repository
 2. Install requirements
-3. Run main.py
-4. Run interaction.py
+3. Create a system environment variable named TOKEN and its value being your discord bots token
+4. Run main.py
+5. Run interaction.py
 
 For any help you can [check out our Discord server](https://discord.gg/Xq44DsKG) or message me [directly on Twitter](https://twitter.com/JonathanRJoyner).
