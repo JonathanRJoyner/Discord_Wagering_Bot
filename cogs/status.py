@@ -11,7 +11,7 @@ class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command()
+    @discord.slash_command(guild_ids=[958450378083561472,888919487255031848])
     async def user_status(self, ctx):
         '''Returns the users amount along with any unpaid wagers.'''
         user = [str(ctx.author.id), str(ctx.author.name)]
@@ -40,7 +40,7 @@ class Status(commands.Cog):
             ' ',embed=info_embed
         )
 
-    @discord.slash_command()
+    @discord.slash_command(guild_ids=[958450378083561472,888919487255031848])
     async def global_leaderboard(self, ctx):
         '''Returns top 10 users'''
         users = db.top_10_users()

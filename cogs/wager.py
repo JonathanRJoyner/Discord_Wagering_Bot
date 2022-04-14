@@ -90,7 +90,7 @@ class Wager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command()
+    @discord.slash_command(guild_ids=[958450378083561472,888919487255031848])
     async def wager(
         self,
         ctx: discord.ApplicationContext,
