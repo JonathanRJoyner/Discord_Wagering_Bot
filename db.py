@@ -280,3 +280,13 @@ def increase_all_user_amounts():
                     SET amount = amount + ?''', (1000,))
 
     con.commit()
+
+def top_10_users():
+
+    top_users = cur.execute(
+        '''SELECT name, amount FROM users
+            ORDER BY amount DESC
+            LIMIT 10;'''
+        ).fetchall()
+
+    return top_users
