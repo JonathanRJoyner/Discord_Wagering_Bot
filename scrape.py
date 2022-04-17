@@ -35,15 +35,15 @@ class UpcomingMatch:
                 EC.presence_of_element_located((By.CLASS_NAME, "bucket__title-button"))
             )
             time.sleep(1)
+            html = driver.page_source
+
 
         except TimeoutException as ex:
             print(f'UpcomingMatch: {ex}')
             pass
-
-        html = driver.page_source
-
+        
         return html
-
+        
     def sport(self):
         '''Takes the url path and gets the sport.'''
 
