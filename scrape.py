@@ -36,13 +36,14 @@ class UpcomingMatch:
             )
             time.sleep(1)
             html = driver.page_source
-        
+            return html
+
         except TimeoutException as ex:
             print(f'UpcomingMatch: {ex}')
             pass
 
 
-        return html
+
 
     def sport(self):
         '''Takes the url path and gets the sport.'''
@@ -224,12 +225,12 @@ class MatchResult:
 
         try:
             html = driver.page_source
-        
+            return html
+
         except TimeoutException as ex:
             print(f'MatchResult: {ex}')
             pass
 
-        return html
     
     def soup(self):
         return BeautifulSoup(self.html, 'html.parser')
