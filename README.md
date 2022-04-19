@@ -29,4 +29,4 @@ Currently, the deployment route is as follows:
 4. Run main.py
 5. Run interaction.py
 
-For any help you can [check out our Discord server](https://discord.gg/Xq44DsKG) or message me [directly on Twitter](https://twitter.com/JonathanRJoyner).
+For any help you can [check out our Discord server](https://discord.gg/TKGHtwVETT) or message me [directly on Twitter](https://twitter.com/JonathanRJoyner).
